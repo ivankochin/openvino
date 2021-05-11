@@ -77,6 +77,18 @@ if (THREADING STREQUAL "OMP")
     
 endif ()
 
+## pre-production package for hybrid support (windows/macos/linux only)
+if (NOT ANDROID AND NOT(LINUX AND AARCH64))
+    if(DEFINED ENV{THIRDPARTY_SERVER_PATH})
+        set(IE_PATH_TO_DEPS "$ENV{THIRDPARTY_SERVER_PATH}")
+    elseif(DEFINED THIRDPARTY_SERVER_PATH)
+        set(IE_PATH_TO_DEPS "${THIRDPARTY_SERVER_PATH}")
+    else()
+        message(WARNING "THIRDPARTY_SERVER_PATH is not set (env or cmake cmd-line define). Pre-production TBB (with Hybrid support) cannot be loaded!")
+    endif()
+    message(STATUS "THIRDPARTY_SERVER_PATH=${IE_PATH_TO_DEPS}")
+endif()
+
 ## TBB package
 if (THREADING STREQUAL "TBB" OR THREADING STREQUAL "TBB_AUTO")
     reset_deps_cache(TBBROOT TBB_DIR)
